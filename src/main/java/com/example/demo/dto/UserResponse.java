@@ -6,16 +6,27 @@ import java.util.Set;
 
 public class UserResponse {
 
+    private String id;
+
     private String message;
 
     private String username;
 
     private Set<Roles> roles;
 
-    public UserResponse(String message, String username, Set<Roles> roles) {
+    public UserResponse(String id, String message, String username, Set<Roles> roles) {
+        this.id = id;
         this.message = message;
         this.username = username;
         this.roles = roles;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMessage() {
