@@ -64,6 +64,8 @@ public class SecurityConfig {
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/signin").permitAll()
+                        .requestMatchers("/api/auth/signup").permitAll()
+                        .requestMatchers("/send-email").permitAll()
                 .anyRequest().authenticated());
 
                 http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

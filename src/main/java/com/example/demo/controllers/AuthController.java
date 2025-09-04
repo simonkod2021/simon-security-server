@@ -1,12 +1,10 @@
 package com.example.demo.controllers;
-
 import com.example.demo.Util.JwtUtil;
-import com.example.demo.dto.UserRequest;
-import com.example.demo.dto.UserResponse;
+import com.example.demo.dto.*;
 import com.example.demo.models.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.RegisterService;
 import com.example.demo.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,17 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final RegisterService registerService;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, UserService userService) {
+    public AuthController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, UserService userService, RegisterService registerService) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+        this.registerService = registerService;
     }
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody User user) {
@@ -47,24 +45,28 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        jwtUtil.generateToken(userDetails.getUsername());
-        UserResponse userResponse = new UserResponse(userService.findByUsername(user.getUsername()).getId(),"Successfully logged in", user.getUsername(), userService.findByUsername(user.getUsername()).getRoles());
-        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+        jwtUtil.generateToken(String.valueOf(userDetails));
+        AuthResponse authResponse = new AuthResponse(userService.findByUsername(user.getUsername()).getId(),"Successfully logged in", user.getUsername(), userService.findByUsername(user.getUsername()).getRoles());
+        return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
     }
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody UserRequest userRequest) {
-        if (userRepository.existsByUsername(userRequest.getUsername())) {
+    public ResponseEntity<?> signup(@RequestBody RegisterRequest registerRequest) {
+
+        if(registerService.checkUsernameExists(registerRequest.getUsername())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         }
+
         User user = new User();
-        user.setUsername(userRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setUsername(registerRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        UserResponse userResponse = new UserResponse(userService.findByUsername(user.getUsername()).getId(),"Successfully created a new user", user.getUsername(), user.getRoles());
+        if(!registerService.checkUsernameExists(registerRequest.getUsername()))
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+            userService.createUser(user);
 
+        RegisterResponse registerResponse = new RegisterResponse(userService.findByUsername(user.getUsername()).getId(),"Successfully created a new user", user.getUsername(), user.getRoles());
 
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerResponse);
 
     }
 }
