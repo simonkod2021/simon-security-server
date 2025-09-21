@@ -1,5 +1,6 @@
 package com.example.demo.Util;
 
+import com.example.demo.models.Roles;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Set;
 
 import io.jsonwebtoken.security.Keys;
 
@@ -25,9 +27,10 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
     // Generate JWT Token
-    public String generateToken(String userDetails) {
+    public String generateToken(String username, Set<Roles> roles) {
         return Jwts.builder()
-                .subject(userDetails)
+                .subject(username)
+                .claim("roles", roles)
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(new Date(System.currentTimeMillis()+expiration))
                 .signWith(secretKey, Jwts.SIG.HS256)

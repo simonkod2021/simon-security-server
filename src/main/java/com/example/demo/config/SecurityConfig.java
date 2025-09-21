@@ -2,6 +2,8 @@ package com.example.demo.config;
 
 import com.example.demo.Util.AuthEntryPointJwt;
 import com.example.demo.Util.AuthTokenFilter;
+import org.springframework.security.config.Customizer;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 
 @Configuration
@@ -55,7 +59,7 @@ public class SecurityConfig {
                 csrf(AbstractHttpConfigurer::disable)
 
                 // Configure CORS
-                .cors(cors -> cors.configure(http))
+                .cors(Customizer.withDefaults())
 
                 // Session management
                 .sessionManagement(session -> session
@@ -64,8 +68,8 @@ public class SecurityConfig {
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/signin").permitAll()
-                        .requestMatchers("/api/auth/signup").permitAll()
-                        .requestMatchers("/send-email").permitAll()
+                .requestMatchers("/api/auth/signup").permitAll()
+                .requestMatchers("/send-email").permitAll()
                 .anyRequest().authenticated());
 
                 http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -74,16 +78,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000"); // Your frontend URL
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.setAllowedOrigins(List.of("http://localhost:5173")); // React dev server
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return source;
     }
+
 
 
 }
