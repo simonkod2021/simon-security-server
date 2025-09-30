@@ -1,21 +1,19 @@
 package com.example.demo.dto;
 
+import org.springframework.data.annotation.Id;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
-public class RegisterRequest {
-//    @NotBlank
-//    @Size(min = 4, max = 20)
+public class AuthRequest {
+    @Id
+    private String id;
     private String username;
-
-//    @NotBlank
-//    @Size(min = 6, max = 100)
     private String password;
 
-    public RegisterRequest(String username, String password) {
+    public AuthRequest(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public AuthRequest() {
     }
 
     public String getUsername() {
@@ -32,5 +30,11 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
     }
 }

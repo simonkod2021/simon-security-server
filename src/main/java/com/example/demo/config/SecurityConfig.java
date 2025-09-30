@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.Util.AuthEntryPointJwt;
 import com.example.demo.Util.AuthTokenFilter;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.context.annotation.Bean;
@@ -26,25 +27,18 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-    private final AuthEntryPointJwt authEntryPointJwt;
+
     private final AuthTokenFilter authTokenFilter;
 
     // Constructor injection
-    public SecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJwt authEntryPointJwt, AuthTokenFilter authTokenFilter) {
-        this.userDetailsService = userDetailsService;
-        this.authEntryPointJwt = authEntryPointJwt;
+    public SecurityConfig(AuthTokenFilter authTokenFilter) {
         this.authTokenFilter = authTokenFilter;
     }
 
 
-    @Bean
-    // Changed to Argon2 instead of Bcrypt
-    public PasswordEncoder passwordEncoder() {
-        return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-    }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -67,10 +61,9 @@ public class SecurityConfig {
 
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/signin").permitAll()
-                .requestMatchers("/api/auth/signup").permitAll()
-                .requestMatchers("/send-email").permitAll()
-                .anyRequest().authenticated());
+                        .requestMatchers("/api/auth/check").authenticated()
+                        .requestMatchers("/api/users/me").authenticated()
+                        .anyRequest().permitAll());
 
                 http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -2,7 +2,7 @@ package com.example.demo.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.example.demo.models.Roles;
+
 
 
 import java.util.Set;
@@ -18,6 +18,12 @@ public class User {
 
     private Set<Roles> roles;
 
+    private String description;
+
+    private byte[] image;
+
+    private String location;
+
     public User(String id, String username, String password, Set<Roles> roles) {
         this.id = id;
         this.username = username;
@@ -26,6 +32,30 @@ public class User {
     }
 
     public User() {
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getId() {

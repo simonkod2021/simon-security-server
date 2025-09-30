@@ -12,6 +12,6 @@ public class RegisterService {
         this.userRepository = userRepository;
     }
     public boolean checkUsernameExists(String username){
-        return userRepository.findByUsername(username).isPresent();
+        return userRepository.findById(username).isPresent();
     }
 }
