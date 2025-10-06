@@ -1,3 +1,9 @@
+# 👋🏼 Welcome to my blogpost API 
+### The following is a quick guide on how to use the API
+### This also serves as my backend for a React application i am working on
+---
+
+
 # 🚀 REST API Installation & Testing Guide
 
 Follow these instructions to set up and test the REST API.
