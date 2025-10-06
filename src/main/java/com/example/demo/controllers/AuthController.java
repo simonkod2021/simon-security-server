@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@ControllerAdvice
 @RequestMapping("/api/auth")
 public class AuthController {
 
