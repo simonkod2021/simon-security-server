@@ -1,10 +1,13 @@
-# 👋🏼 Welcome to my blogpost API 
-### The following is a quick guide on how to use the API
-### This also serves as my backend for a React application i am working on
+## 👋🏼 Welcome to my blogpost API 
+* The following is a quick guide on how to use the API
+* This also serves as my backend for a React application i am working on
+---
+* 🛠 Work in progress, stay tuned for updates
+* 📧Feel free to ask me about the project at `simon98larsson@gmail.com`
 ---
 
 
-# 🚀 REST API Installation & Testing Guide
+## 🚀 REST API Installation & Testing Guide
 
 Follow these instructions to set up and test the REST API.
 
@@ -39,9 +42,9 @@ gh repo clone simonkod2021/simon-security
 
 ## 2️⃣ Open the Project
 
-Open the cloned `simon-security` directory in your favorite IDE (e.g., IntelliJ IDEA, VS Code, Eclipse).  
+Open the cloned `simon-security` directory in your favorite IDE (e.g., `IntelliJ IDEA`, `VS Code`, `Eclipse`).  
 
-> 💡 Recommended: IntelliJ IDEA, but any IDE works.
+> 💡 Recommended: `IntelliJ IDEA`, but any IDE works
 
 ---
 
