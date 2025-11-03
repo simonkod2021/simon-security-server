@@ -24,11 +24,19 @@ public class CommentService {
         return commentRepository.findByBlogPost_Id(blogPostId);
     }
 
-    public Comment addComment(String blogPostId, Comment comment) {
-        BlogPosts post = blogPostRepository.findById(blogPostId)
+    public void addComment(String id, Comment comment) {
+        BlogPosts post = blogPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         comment.setBlogPost(post);
         comment.setCreatedAt(LocalDateTime.now());
-        return commentRepository.save(comment);
+        System.out.println("Service - Comment text: " + comment.getText());
+        System.out.println("Service - BlogPost: " + post.getId());
+        commentRepository.save(comment);
+        System.out.println("Comment saved with ID: " + comment.getId());
+    }
+
+    // Return all comments in the database
+    public List<Comment> getAllComments(){
+        return commentRepository.findAll();
     }
 }

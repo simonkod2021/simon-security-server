@@ -2,6 +2,7 @@ package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,7 +15,9 @@ import java.util.List;
 public class BlogPosts {
     @Id
     private String id;
+    @Size(min = 5, max = 25, message = "Title must be > 5 characters and maximum 25 characters")
     private String title;
+    @Size(min = 10, max = 100, message = "Content must be > 10 characters and maximum 100 characters")
     private String content;
     private LocalDateTime createdAt = LocalDateTime.now();
 

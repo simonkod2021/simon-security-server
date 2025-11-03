@@ -6,6 +6,7 @@ import com.example.demo.models.Comment;
 import com.example.demo.repository.BlogPostRepository;
 import com.example.demo.repository.CommentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +36,13 @@ public class BlogPostService {
     public BlogPosts createPost(BlogPosts blogPost){
         blogPost.setCreatedAt(LocalDateTime.now());
         return blogPostRepository.save(blogPost);
+    }
+
+    public BlogPosts deleteBlogPost(@PathVariable String id){
+        BlogPosts blogPost = getBlogPostById(id);
+        blogPostRepository.deleteById(id);
+        return blogPost;
+
     }
 
     // Add a new comment on a post by its id and save it to the DB
