@@ -31,7 +31,7 @@ public class UserService {
 
     public void createUser(@Valid RegisterRequest registerRequest) {
         if(registerService.checkUsernameExists(registerRequest.getUsername())){
-            ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
+            throw new IllegalArgumentException("Username already exists");
         }
 
         User user = new User();
@@ -46,12 +46,7 @@ public class UserService {
         logger.info("New user registered with username: {}", registerRequest.getUsername());
 
         userRepository.save(user);
-
-
     }
-
-
-
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -69,11 +64,4 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
         return user.getUsername();
     }
-
-
-
-
-
-
-
 }

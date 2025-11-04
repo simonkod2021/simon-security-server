@@ -52,8 +52,8 @@ class SigninIntegrationTest extends BaseIntegrationTest {
         ResponseEntity<Map> response = rest.postForEntity("/api/auth/signin", request, Map.class);
 
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-        assertThat(response.getBody()).isNotNull()
-                .containsKey("jwtToken");
+        assertThat(response.getBody()).isNotNull().containsKey("jwtToken");
+
     }
 
     @Test

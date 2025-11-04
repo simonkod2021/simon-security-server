@@ -3,8 +3,10 @@ package com.example.demo.service;
 import com.example.demo.dto.BlogPostsDTO;
 import com.example.demo.models.BlogPosts;
 import com.example.demo.models.Comment;
+import com.example.demo.models.User;
 import com.example.demo.repository.BlogPostRepository;
 import com.example.demo.repository.CommentRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -15,10 +17,12 @@ import java.util.List;
 public class BlogPostService {
     private final BlogPostRepository blogPostRepository;
     private final CommentRepository commentRepository;
+    private final UserService userService;
 
-    public BlogPostService(BlogPostRepository blogPostRepository, CommentRepository commentRepository) {
+    public BlogPostService(BlogPostRepository blogPostRepository, CommentRepository commentRepository, UserService userService) {
         this.blogPostRepository = blogPostRepository;
         this.commentRepository = commentRepository;
+        this.userService = userService;
     }
 
     // Return all blog posts in the database
@@ -33,9 +37,25 @@ public class BlogPostService {
     }
 
     // Create a new blog post
-    public BlogPosts createPost(BlogPosts blogPost){
+    public void createPost(BlogPostsDTO dto, Authentication authentication){
+
+        // Get the current authenticated user
+        String username = authentication.getName();
+
+        // Find the user by username and set as author
+        User author = userService.findByUsername(username);
+
+        BlogPosts blogPost = new BlogPosts();
+
+        // Set the author and other fields properly
+        blogPost.setAuthor(author);
+        // Set current timestamp
         blogPost.setCreatedAt(LocalDateTime.now());
-        return blogPostRepository.save(blogPost);
+        // Set current timestamp
+        blogPost.setContent(dto.getContent());
+        blogPost.setTitle(dto.getTitle());
+
+        blogPostRepository.save(blogPost);
     }
 
     public BlogPosts deleteBlogPost(@PathVariable String id){
